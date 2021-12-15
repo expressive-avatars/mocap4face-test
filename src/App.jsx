@@ -1,4 +1,4 @@
-import { useRef } from 'react'
+import { Suspense, useRef } from 'react'
 import { OrbitControls, TorusKnot } from '@react-three/drei'
 import { Canvas, useFrame } from '@react-three/fiber'
 import { useFacetracking } from './hooks'
@@ -12,7 +12,9 @@ export default function App() {
         <color attach="background" args={['black']} />
         <OrbitControls />
         <Thing />
-        <Facetracker videoRef={videoRef} />
+        <Suspense fallback={null}>
+          <Facetracker videoRef={videoRef} />
+        </Suspense>
       </Canvas>
       <Webcam ref={videoRef} play style={{ position: 'fixed', zIndex: 1, top: 1, transform: 'scale(-1, 1)' }} width={300} />
     </>
