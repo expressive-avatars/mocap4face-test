@@ -29,7 +29,9 @@ function Facetracker({ videoRef }) {
   return null
 }
 
-const avatarURL = 'https://d1a370nemizbjq.cloudfront.net/54a8ca1e-1759-4cf9-ab76-bec155d6c83c.glb'
+// const avatarURL = 'https://d1a370nemizbjq.cloudfront.net/54a8ca1e-1759-4cf9-ab76-bec155d6c83c.glb'
+
+const avatarURL = 'https://d1a370nemizbjq.cloudfront.net/b2572c50-a10a-42b6-ab30-694f60fed40f.glb'
 
 function Model({ videoRef }) {
   const { scene, nodes } = useGLTF(avatarURL)
@@ -42,6 +44,12 @@ function Model({ videoRef }) {
   /** @type {THREE.Bone} */
   const headBone = nodes.Head
 
+  /** @type {THREE.Bone} */
+  const eyeLeft = nodes.LeftEye
+
+  /** @type {THREE.Bone} */
+  const eyeRight = nodes.RightEye
+
   window.face = face
 
   useFacetracking(videoRef, (blendShapes, quaternion) => {
@@ -51,6 +59,13 @@ function Model({ videoRef }) {
       face.morphTargetInfluences[i] = blendShapes[key]
       teeth.morphTargetInfluences[i] = blendShapes[key]
     }
+
+    eyeRight.rotation.set(
+      -Math.PI / 2 + blendShapes['eyeLookDown_R'] * 0.5 - blendShapes['eyeLookUp_R'] * 0.5,
+      0,
+      Math.PI - blendShapes['eyeLookOut_R'] + blendShapes['eyeLookOut_L']
+    )
+    eyeLeft.rotation.copy(eyeRight.rotation)
 
     headBone.quaternion.fromArray(quaternion)
   })
