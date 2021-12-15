@@ -46,7 +46,9 @@ export function useFacetracking(videoRef, fn = () => {}) {
     try {
       const tracker = asyncTracker.currentValue
       const lastResult = tracker.track(videoRef.current)
-      fn(Object.fromEntries(lastResult.blendshapes))
+      const blendShapesObject = Object.fromEntries(lastResult.blendshapes)
+      const quaternionArray = lastResult.rotationQuaternion.asList().toArray()
+      fn(blendShapesObject, quaternionArray)
     } catch (e) {}
   })
 }

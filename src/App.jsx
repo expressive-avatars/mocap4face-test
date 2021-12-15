@@ -19,7 +19,7 @@ export default function App() {
           <Environment preset="warehouse" background />
         </Suspense>
       </Canvas>
-      <Webcam ref={videoRef} play style={{ position: 'fixed', zIndex: 1, top: 1, transform: 'scale(-1, 1)' }} width={300} />
+      <Webcam ref={videoRef} play style={{ position: 'fixed', zIndex: 1, top: 1 }} width={300} />
     </>
   )
 }
@@ -44,13 +44,15 @@ function Model({ videoRef }) {
 
   window.face = face
 
-  useFacetracking(videoRef, (blendShapes) => {
+  useFacetracking(videoRef, (blendShapes, quaternion) => {
     window.blendShapes = blendShapes
     for (let key in blendShapes) {
       const i = face.morphTargetDictionary[facemoji2arkit[key]]
       face.morphTargetInfluences[i] = blendShapes[key]
       teeth.morphTargetInfluences[i] = blendShapes[key]
     }
+
+    headBone.quaternion.fromArray(quaternion)
   })
 
   return <primitive object={scene} position={[0, -2.4, 0]} scale={4} />
