@@ -1,14 +1,21 @@
 import { useRef } from 'react'
 import { OrbitControls, TorusKnot } from '@react-three/drei'
 import { Canvas, useFrame } from '@react-three/fiber'
+import { useFacetracking } from './hooks'
+import { Webcam } from './Webcam'
 
 export default function App() {
+  const videoRef = useRef()
   return (
-    <Canvas>
-      <color attach="background" args={['black']} />
-      <OrbitControls />
-      <Thing />
-    </Canvas>
+    <>
+      <Canvas>
+        <color attach="background" args={['black']} />
+        <OrbitControls />
+        <Thing />
+        <Facetracker videoRef={videoRef} />
+      </Canvas>
+      <Webcam ref={videoRef} play style={{ position: 'fixed', zIndex: 1, top: 1, transform: 'scale(-1, 1)' }} width={300} />
+    </>
   )
 }
 
@@ -20,4 +27,9 @@ function Thing() {
       <meshNormalMaterial />
     </TorusKnot>
   )
+}
+
+function Facetracker({ videoRef }) {
+  useFacetracking(videoRef)
+  return null
 }
